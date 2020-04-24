@@ -1,0 +1,35 @@
+#!/bin/bash
+
+#gcc -o ./out/$1 ./src/${1} -lGL -lGLU -lglut -lm && ./out/${1}
+
+#!/bin/bash
+set -x
+
+if [ "$1" = "build" ]; then
+    SourceDir="../src/" # relative to the out directory
+    CompilerFlags="-lGL -lGLU -lglut -lm"
+
+    mkdir -p out
+    cd out
+
+    # for each .c file in the src directory, compile it to an .o file
+    for File in ${SourceDir}*.c
+    do
+        # gcc -O -c $File -o $(basename $File .c).o
+        gcc -c $File $CompilerFlags
+    done
+
+    # each .o file excluding main.o (because it needs to come first in the arguments to gcc)
+    OFilesWithoutMain=$(find . -maxdepth 1 -type f -name "*.o" ! -name "main.o")
+
+    # link all .o files
+    gcc -o main main.o $OFilesWithoutMain $CompilerFlags
+elif [ "$1" = "clean" ]; then
+    rm out/*
+elif [ "$1" = "run" ]; then
+    ./build clean
+    ./build build
+    ./out/main
+else
+    echo "expected action type as a parameter"
+fi
