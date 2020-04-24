@@ -1,9 +1,9 @@
 #!/bin/bash
+# Author: Liam Pribis
 
-#gcc -o ./out/$1 ./src/${1} -lGL -lGLU -lglut -lm && ./out/${1}
-
-#!/bin/bash
-set -x
+# abort on any error
+set -e
+MainFile="main"
 
 if [ "$1" = "build" ]; then
     SourceDir="../src/" # relative to the out directory
@@ -15,21 +15,23 @@ if [ "$1" = "build" ]; then
     # for each .c file in the src directory, compile it to an .o file
     for File in ${SourceDir}*.c
     do
-        # gcc -O -c $File -o $(basename $File .c).o
         gcc -c $File $CompilerFlags
     done
 
-    # each .o file excluding main.o (because it needs to come first in the arguments to gcc)
-    OFilesWithoutMain=$(find . -maxdepth 1 -type f -name "*.o" ! -name "main.o")
+    # find each .o file excluding $MainFile.o (because it needs to come first in the arguments to gcc)
+    OFilesWithoutMain=$(find . -maxdepth 1 -type f -name "*.o" ! -name "$MainFile.o")
 
     # link all .o files
-    gcc -o main main.o $OFilesWithoutMain $CompilerFlags
+    gcc -o $MainFile $MainFile.o $OFilesWithoutMain $CompilerFlags
+
 elif [ "$1" = "clean" ]; then
-    rm out/*
+    rm -f out/*
+
 elif [ "$1" = "run" ]; then
     ./build clean
     ./build build
-    ./out/main
+    ./out/$MainFile
+
 else
-    echo "expected action type as a parameter"
+    echo -e "usage:\n./build build\n./build clean\n./build run"
 fi
