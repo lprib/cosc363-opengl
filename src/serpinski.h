@@ -15,7 +15,8 @@ typedef struct {
 typedef struct {
     Point_t from_points[4];
     Point_t to_points[4];
-    double lerp_amount;
+    double normalize_bottom;
+    double normalize_top;
 } Tetra_t;
 
 #endif
