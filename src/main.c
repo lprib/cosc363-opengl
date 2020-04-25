@@ -43,7 +43,7 @@ void display() {
 
   glEnable(GL_LIGHTING);
   // glutSolidTeapot(1);
-  /*
+  
   glPushMatrix();
   // glTranslated(0.0, 5.0, 0.0);
   // glRotated(10, 1.0, 0.0, 0.0);
@@ -51,7 +51,7 @@ void display() {
   julia_draw();
   glPopMatrix();
   serpinski_draw();
-  */
+  
   fire_draw();
   glFlush();
 }
