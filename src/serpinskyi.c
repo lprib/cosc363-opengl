@@ -161,11 +161,14 @@ void serpinski_update(double delta) {
 }
 
 void serpinski_draw() {
+  glPushMatrix();
+  glRotated(current_lerp * 2, 0.0, 1.0, 0.0);
   for (int i = 0; i < num_tetras; i++) {
     draw_tetra(
         &tetras[i],
-        sin(current_lerp + 2 * M_PI * tetras[i].normalize_top) / 2.0 + 1.0);
+        sin(current_lerp + 2 * M_PI * tetras[i].normalize_top) / 4.0 + .75);
   }
+  glPopMatrix();
 }
 
 void serpinski_keyboard_func(unsigned char key, int x, int y) {
