@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "serpinski.h"
 #include "julia.h"
+#include "fire.h"
 
 float camera_height = 10;
 float camera_angle = 0;
@@ -42,9 +43,16 @@ void display() {
 
   glEnable(GL_LIGHTING);
   // glutSolidTeapot(1);
+  /*
+  glPushMatrix();
+  // glTranslated(0.0, 5.0, 0.0);
+  // glRotated(10, 1.0, 0.0, 0.0);
+  // glScaled(5.0, 1.0, 5.0);
   julia_draw();
-  // serpinski_draw();
-
+  glPopMatrix();
+  serpinski_draw();
+  */
+  fire_draw();
   glFlush();
 }
 
@@ -66,7 +74,7 @@ void initialize() {
 
   camera_init();
   serpinski_init();
-  julia_init();
+  fire_init();
 }
 
 void keyboard_func(unsigned char key, int x, int y) {
@@ -75,7 +83,6 @@ void keyboard_func(unsigned char key, int x, int y) {
 
 void special(int key, int x, int y) {
   camera_special_keys(key, x, y);
-  glutPostRedisplay();
 }
 
 void special_up(int key, int x, int y) { camera_special_keys_up(key, x, y); }
@@ -90,8 +97,9 @@ void update_timer(int value) {
   double deltaSeconds = delta / 1000.0;
 
   camera_update(deltaSeconds);
-  // serpinski_update(deltaSeconds);
+  serpinski_update(deltaSeconds);
   julia_update(deltaSeconds);
+  fire_update(deltaSeconds);
 }
 
 int main(int argc, char** argv) {

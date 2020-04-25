@@ -4,15 +4,22 @@
 #include <math.h>
 #include <stdbool.h>
 
+// In units per second (used with frame delta time)
 #define MOVE_SPEED 5
 #define ANGLE_SPEED 3
 
-static double angle = 0.0f;
-static double cx = 10.0f;
-static double cz = 10.0f;
-static double look_x = 0.0f;
-static double look_z = -1.0f;
+//camera angle
+static double angle = 0.0;
+//camera x position
+static double cx = 0.0;
+//camera y position
+static double cz = 0.0;
 
+//look vector
+static double look_x = 0.0;
+static double look_z = -1.0;
+
+// Which keys are currently held down (left, right, up, down) arrows respectively
 static bool keysDown[] = {false, false, false, false};
 
 void camera_init() {
