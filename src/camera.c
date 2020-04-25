@@ -1,9 +1,11 @@
+#include "camera.h"
+
 #include <GL/freeglut.h>
 #include <math.h>
 #include <stdbool.h>
 
-#define MOVE_SPEED 3
-#define ANGLE_SPEED 1
+#define MOVE_SPEED 5
+#define ANGLE_SPEED 3
 
 static double angle = 0.0f;
 static double cx = 10.0f;
@@ -13,10 +15,14 @@ static double look_z = -1.0f;
 
 static bool keysDown[] = {false, false, false, false};
 
-void camera_init() { glutIgnoreKeyRepeat(true); }
+void camera_init() {
+  glutIgnoreKeyRepeat(true);
+  glFrustum(-0.5, 0.5, -0.5, 0.5, 1.0, 1000.0);
+}
 
-// Updates the state of pressed keys in keysDownArray, based on the key provided.
-// if press is true, the specified key will be set. if press is false it will be reset.
+// Updates the state of pressed keys in keysDownArray, based on the key
+// provided. if press is true, the specified key will be set. if press is false
+// it will be reset.
 static void update_key_array(int key, bool press) {
   switch (key) {
     case GLUT_KEY_LEFT:

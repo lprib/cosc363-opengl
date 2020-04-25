@@ -1,7 +1,8 @@
 #include <GL/freeglut.h>
 #include <math.h>
-#include "camera.h"
 
+#include "camera.h"
+#include "serpinski.h"
 
 float camera_height = 10;
 float camera_angle = 0;
@@ -22,14 +23,15 @@ void drawFloor() {
 }
 
 void display() {
-  float lightPostion[4] = {0, 10, 10, 1};
+  float lightPostion[4] = {0, 10, 15, 1};
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
   camera_draw();
-  // gluLookAt(12 * sin(camera_angle), camera_height, 12 * cos(camera_angle), 0, 0,
+  // gluLookAt(12 * sin(camera_angle), camera_height, 12 * cos(camera_angle), 0,
+  // 0,
   //           0, 0, 1, 0);
 
   glLightfv(GL_LIGHT0, GL_POSITION, lightPostion);
@@ -38,8 +40,8 @@ void display() {
   drawFloor();
 
   glEnable(GL_LIGHTING);
-  glColor3f(0, 1, 1);
-  glutSolidTeapot(1);
+  // glutSolidTeapot(1);
+  serpinski_draw();
 
   glFlush();
 }
@@ -55,10 +57,17 @@ void initialize() {
 
   glMatrixMode(GL_PROJECTION);
 
+  glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+  glEnable(GL_COLOR_MATERIAL);
+
   glLoadIdentity();
-  glFrustum(-5.0, 5.0, -5.0, 5.0, 10.0, 1000.0);
 
   camera_init();
+  serpinski_init();
+}
+
+void keyboard_func(unsigned char key, int x, int y) {
+  serpinski_keyboard_func(key, x, y);
 }
 
 void special(int key, int x, int y) {
@@ -66,9 +75,7 @@ void special(int key, int x, int y) {
   glutPostRedisplay();
 }
 
-void special_up(int key, int x, int y) {
-  camera_special_keys_up(key, x, y);
-}
+void special_up(int key, int x, int y) { camera_special_keys_up(key, x, y); }
 
 void update_timer(int value) {
   int elapsedTime = glutGet(GLUT_ELAPSED_TIME);
@@ -79,7 +86,8 @@ void update_timer(int value) {
 
   double deltaSeconds = delta / 1000.0;
 
-  camera_update(delta);
+  camera_update(deltaSeconds);
+  serpinski_update(deltaSeconds);
 }
 
 int main(int argc, char** argv) {
@@ -92,6 +100,7 @@ int main(int argc, char** argv) {
   glutDisplayFunc(display);
   glutSpecialFunc(special);
   glutSpecialUpFunc(special_up);
+  glutKeyboardFunc(keyboard_func);
   update_timer(0);
   glutMainLoop();
   return 0;
