@@ -5,24 +5,33 @@
 #include <stdio.h>
 #include <string.h>
 
-#define LERP_SPEED 4
+// speed of oscillation update
+#define LERP_SPEED 8
+// slight offset added to each tetrahedron to prevent z-fighting
 #define Z_FIGHT_OFFSET 0.001
+// max number of subfivides allowed to prevent lag
 #define SUBDIVIDE_LIMIT 7
+
+// used for rotation axis offset
+#define CENTRE_X 0.5
+#define CENTRE_Z 0.28868
 
 #define ZERO_POINT \
   { 0.0, 0.0, 0.0 }
 
+// Initially a regular unit tetrahedron
 static Tetra_t INITIAL = {
+    //todo cooler looking init from_points
     .from_points = {ZERO_POINT, ZERO_POINT, ZERO_POINT, ZERO_POINT},
-    .to_points = {{0.0, 1.0, 0.0},
-                  {1.0, 0.0, 1.0},
-                  {1.0, 0.0, -1.0},
-                  {-1.0, 0.0, 0.0}},
+    .to_points = {{CENTRE_X, 0.8165, CENTRE_Z},
+                  {0.0, 0.0, 0.0},
+                  {1.0, 0.0, 0.0},
+                  {0.5, 0.0, 0.866}},
     .normalize_bottom = 0.0,
     .normalize_top = 1.0};
 
-static int num_tetras = 0;
-static Tetra_t* tetras = NULL;
+static int tetras_buffer_size = 0;
+static Tetra_t* tetras_buffer = NULL;
 static int num_subdivides = 0;
 
 static double current_lerp = 0.0;
@@ -31,10 +40,12 @@ static void glVertexPoint(Point_t point) {
   glVertex3d(point.x, point.y, point.z);
 }
 
+// linearly interpolate between two doubles
 static double lerp_double(double d0, double d1, double t) {
   return d0 + t * (d1 - d0);
 }
 
+// linearly interpolate between two points
 static Point_t lerp_point(Point_t p0, Point_t p1, double t) {
   Point_t ret = {lerp_double(p0.x, p1.x, t), lerp_double(p0.y, p1.y, t),
                  lerp_double(p0.z, p1.z, t)};
@@ -42,6 +53,7 @@ static Point_t lerp_point(Point_t p0, Point_t p1, double t) {
   return ret;
 }
 
+// standard normal calculation from 3 points
 static void normal(Point_t p1, Point_t p2, Point_t p3) {
   float nx, ny, nz;
   nx = p1.y * (p2.z - p3.z) + p2.y * (p3.z - p1.z) + p3.y * (p1.z - p2.z);
@@ -50,8 +62,10 @@ static void normal(Point_t p1, Point_t p2, Point_t p3) {
   glNormal3f(nx, ny, nz);
 }
 
+// draw a single tetrahedron given the lerp amount between from_points and
+// to_points
 static void draw_tetra(Tetra_t* tet, double lerp_amount) {
-  glColor3f(tet->normalize_top, 1.0, 1.0 - tet->normalize_bottom);
+  glColor3f(tet->normalize_top, 0.5, 1.0 - tet->normalize_bottom);
   Point_t p0 = lerp_point(tet->from_points[0], tet->to_points[0], lerp_amount);
   Point_t p1 = lerp_point(tet->from_points[1], tet->to_points[1], lerp_amount);
   Point_t p2 = lerp_point(tet->from_points[2], tet->to_points[2], lerp_amount);
@@ -83,8 +97,10 @@ static void draw_tetra(Tetra_t* tet, double lerp_amount) {
   glPopMatrix();
 }
 
+// for debugging purposes
 static void print_point(Point_t p) { printf("(%lf, %lf, %lf)", p.x, p.y, p.z); }
 
+// for debugging purposes
 static void print_tetra(Tetra_t* tet) {
   printf("from: ");
   for (int i = 0; i < 4; i++) {
@@ -100,10 +116,13 @@ static void print_tetra(Tetra_t* tet) {
   printf("\nnt: %lf\n", tet->normalize_top);
 }
 
+// Holding struct so that the subdivide operation can return 4 structs
 typedef struct {
   Tetra_t tets[4];
 } SubdividedTetra_t;
 
+// Get a single child from a parent tetraheron, given which vertex index they
+// will share (the stationary vertex in this transformation)
 static Tetra_t single_subdivide(Tetra_t* parent, int stationary_vertex_idx) {
   Tetra_t child = {0};
   child.normalize_top = 0.0;
@@ -123,6 +142,7 @@ static Tetra_t single_subdivide(Tetra_t* parent, int stationary_vertex_idx) {
   return child;
 }
 
+// Divide a single parent into four children
 static SubdividedTetra_t subdivide_tetra(Tetra_t* parent) {
   SubdividedTetra_t subdiv = {0};
   for (int i = 0; i < 4; i++) {
@@ -142,17 +162,18 @@ static SubdividedTetra_t subdivide_tetra(Tetra_t* parent) {
   return subdiv;
 }
 
+// Subdivide every tetra in the buffer, and replace the buffer with the children
 static void subdivide_all() {
-  Tetra_t* new_buffer = malloc(sizeof(Tetra_t) * num_tetras * 4);
-  for (int i = 0; i < num_tetras; i++) {
-    SubdividedTetra_t subbed = subdivide_tetra(&tetras[i]);
+  Tetra_t* new_buffer = malloc(sizeof(Tetra_t) * tetras_buffer_size * 4);
+  for (int i = 0; i < tetras_buffer_size; i++) {
+    SubdividedTetra_t subbed = subdivide_tetra(&tetras_buffer[i]);
     for (int offset = 0; offset < 4; offset++) {
       new_buffer[i * 4 + offset] = subbed.tets[offset];
     }
   }
-  num_tetras *= 4;
-  free(tetras);
-  tetras = new_buffer;
+  tetras_buffer_size *= 4;
+  free(tetras_buffer);
+  tetras_buffer = new_buffer;
 }
 
 void serpinski_update(double delta) {
@@ -162,11 +183,14 @@ void serpinski_update(double delta) {
 
 void serpinski_draw() {
   glPushMatrix();
+  // translate so rotation is around centre of the tetrahedron
   glRotated(current_lerp * 2, 0.0, 1.0, 0.0);
-  for (int i = 0; i < num_tetras; i++) {
+  glTranslated(-CENTRE_X, 0.0, -CENTRE_Z);
+  for (int i = 0; i < tetras_buffer_size; i++) {
     draw_tetra(
-        &tetras[i],
-        sin(current_lerp + 2 * M_PI * tetras[i].normalize_top) / 4.0 + .75);
+        &tetras_buffer[i],
+        sin(current_lerp + 2 * M_PI * tetras_buffer[i].normalize_top) / 2.0 +
+            1);
   }
   glPopMatrix();
 }
@@ -175,10 +199,10 @@ void serpinski_keyboard_func(unsigned char key, int x, int y) {
   if (key == 's') {
     num_subdivides++;
     if (num_subdivides >= SUBDIVIDE_LIMIT) {
-      free(tetras);
-      num_tetras = 1;
-      tetras = (Tetra_t*)malloc(sizeof(Tetra_t));
-      tetras[0] = INITIAL;
+      free(tetras_buffer);
+      tetras_buffer_size = 1;
+      tetras_buffer = (Tetra_t*)malloc(sizeof(Tetra_t));
+      tetras_buffer[0] = INITIAL;
       num_subdivides = 0;
     } else {
       subdivide_all();
@@ -188,7 +212,7 @@ void serpinski_keyboard_func(unsigned char key, int x, int y) {
 }
 
 void serpinski_init() {
-  num_tetras = 1;
-  tetras = (Tetra_t*)malloc(sizeof(Tetra_t));
-  tetras[0] = INITIAL;
+  tetras_buffer_size = 1;
+  tetras_buffer = (Tetra_t*)malloc(sizeof(Tetra_t));
+  tetras_buffer[0] = INITIAL;
 }

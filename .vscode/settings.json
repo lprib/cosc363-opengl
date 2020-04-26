@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "*.rustpeg": "rust",
-        "freeglut.h": "c"
+        "freeglut.h": "c",
+        "*.tcc": "c",
+        "functional": "c",
+        "random": "c",
+        "limits": "c"
     }
 }

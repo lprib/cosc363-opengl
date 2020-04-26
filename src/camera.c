@@ -25,6 +25,7 @@ static bool keysDown[] = {false, false, false, false};
 void camera_init() {
   glutIgnoreKeyRepeat(true);
   glFrustum(-0.5, 0.5, -0.5, 0.5, 1.0, 1000.0);
+  // gluPerspective(40.0, 1.0, 20.0, 500.0);
 }
 
 // Updates the state of pressed keys in keysDownArray, based on the key

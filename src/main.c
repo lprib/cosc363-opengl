@@ -2,9 +2,10 @@
 #include <math.h>
 
 #include "camera.h"
-#include "serpinski.h"
-#include "julia.h"
 #include "fire.h"
+#include "julia.h"
+#include "museum.h"
+#include "serpinski.h"
 
 float camera_height = 10;
 float camera_angle = 0;
@@ -16,10 +17,10 @@ void drawFloor() {
 
   for (int i = -50; i <= 50; i++) {
     glBegin(GL_LINES);
-    glVertex3f(-50, -0.75, i);
-    glVertex3f(50, -0.75, i);
-    glVertex3f(i, -0.75, -50);
-    glVertex3f(i, -0.75, 50);
+    glVertex3f(-50, 0, i);
+    glVertex3f(50, 0, i);
+    glVertex3f(i, 0, -50);
+    glVertex3f(i, 0, 50);
     glEnd();
   }
 }
@@ -43,16 +44,27 @@ void display() {
 
   glEnable(GL_LIGHTING);
   // glutSolidTeapot(1);
-  
+
   glPushMatrix();
-  // glTranslated(0.0, 5.0, 0.0);
-  // glRotated(10, 1.0, 0.0, 0.0);
-  // glScaled(5.0, 1.0, 5.0);
+  glTranslated(5.0, 0.0, 0.0);
+  glScaled(5.0, 1.0, 5.0);
   julia_draw();
   glPopMatrix();
+
+  glPushMatrix();
+  glScaled(2.0, 2.0, 2.0);
   serpinski_draw();
-  
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslated(0.0, 5.0, 0.00);
   fire_draw();
+  glPopMatrix();
+
+  glutSolidCube(1.0);
+
+  museum_draw();
+
   glFlush();
 }
 
@@ -75,15 +87,14 @@ void initialize() {
   camera_init();
   serpinski_init();
   fire_init();
+  museum_init();
 }
 
 void keyboard_func(unsigned char key, int x, int y) {
   serpinski_keyboard_func(key, x, y);
 }
 
-void special(int key, int x, int y) {
-  camera_special_keys(key, x, y);
-}
+void special(int key, int x, int y) { camera_special_keys(key, x, y); }
 
 void special_up(int key, int x, int y) { camera_special_keys_up(key, x, y); }
 

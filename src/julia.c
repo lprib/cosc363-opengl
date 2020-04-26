@@ -3,8 +3,10 @@
 #include <GL/freeglut.h>
 #include <math.h>
 
+#include "util.h"
+
 // max iterations of sqaring/addition before iteration is halted
-#define MAX_ITERATIONS 5
+#define MAX_ITERATIONS 10
 
 // resolution of julia set
 #define BUF_WIDTH 500
@@ -88,15 +90,6 @@ static void bufferVertex(int buf_x, int buf_y) {
   double n = buffer[buf_y * BUF_WIDTH + buf_x];
   glColor3f(n, 0.0, 1 - n);
   glVertex3d(buf_x, height_at(buf_x, buf_y), buf_y);
-}
-
-// Standard normal calc from 3 points
-void normal(double x1, double y1, double z1, double x2, double y2, double z2,
-            double x3, double y3, double z3) {
-  double nx = y1 * (z2 - z3) + y2 * (z3 - z1) + y3 * (z1 - z2);
-  double ny = z1 * (x2 - x3) + z2 * (x3 - x1) + z3 * (x1 - x2);
-  double nz = x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2);
-  glNormal3d(nx, ny, nz);
 }
 
 void julia_draw() {
