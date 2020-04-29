@@ -5,6 +5,7 @@
         "*.tcc": "c",
         "functional": "c",
         "random": "c",
-        "limits": "c"
+        "limits": "c",
+        "util.h": "c"
     }
 }

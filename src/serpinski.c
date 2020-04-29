@@ -19,9 +19,22 @@
 #define ZERO_POINT \
   { 0.0, 0.0, 0.0 }
 
+typedef struct {
+  double x;
+  double y;
+  double z;
+} Point_t;
+
+typedef struct {
+  Point_t from_points[4];
+  Point_t to_points[4];
+  double normalize_bottom;
+  double normalize_top;
+} Tetra_t;
+
 // Initially a regular unit tetrahedron
 static Tetra_t INITIAL = {
-    //todo cooler looking init from_points
+    // todo cooler looking init from_points
     .from_points = {ZERO_POINT, ZERO_POINT, ZERO_POINT, ZERO_POINT},
     .to_points = {{CENTRE_X, 0.8165, CENTRE_Z},
                   {0.0, 0.0, 0.0},

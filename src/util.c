@@ -13,6 +13,8 @@ void normal(double x1, double y1, double z1, double x2, double y2, double z2,
   glNormal3d(nx, ny, nz);
 }
 
+// Adapted from Dr. Makundan's bmp loading routing
+// re-written in c rather than cpp
 void load_bmp(char* filename) {
   char* imageData;
   char header1[18];

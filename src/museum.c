@@ -5,7 +5,7 @@
 
 #include "util.h"
 
-GLuint brick_id;
+static GLuint brick_id;
 
 static double roof_x[] = {0, 8, 8, 0, 4, 4};
 static double roof_y[] = {6, 6, 6, 6, 8, 8};
@@ -90,7 +90,6 @@ void museum_draw() {
   draw_rect(0.1, 0, 7.9, 7.8, 6.0, 0.1);
   draw_rect(0, 0, 1.9, 3.0, 6.0, 0.1);
   draw_rect(5.0, 0, 1.9, 3.0, 6.0, 0.1);
-  glDisable(GL_TEXTURE_2D);
   draw_roof();
   glPopMatrix();
 }

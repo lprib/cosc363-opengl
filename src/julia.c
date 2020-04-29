@@ -93,6 +93,7 @@ static void bufferVertex(int buf_x, int buf_y) {
 }
 
 void julia_draw() {
+  glEnable(GL_LIGHTING);
   glPushMatrix();
   // Make surface a unit square on ground
   glTranslated(0.0, 1.0, 0.0);

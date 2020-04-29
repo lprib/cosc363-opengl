@@ -10,7 +10,11 @@
 
 #define NUM_PARTICLES 500
 
-double count = 0.0;
+static float ambient[] = {1, 1, 1};
+static float diffuse[] = {1.0, 1.0, 0.5};
+static float specular[] = {1, 1, 1};
+
+static double count = 0.0;
 
 typedef struct {
   double x, z, n, limit, speed;
@@ -26,15 +30,15 @@ static void update_particle(Particle_t* p, double delta) {
 }
 
 static void set_color(double life_stage) {
-  if(life_stage < 0.25) {
+  if (life_stage < 0.25) {
     double p = life_stage * 4.0;
-    glColor3d(1.0, 1.0, 1.0-p);
+    glColor3d(1.0, 1.0, 1.0 - p);
   } else if (life_stage < 0.5) {
     double p = (life_stage - 0.25) * 4.0;
-    glColor3d(1.0, 1.0-p, 0.0);
+    glColor3d(1.0, 1.0 - p, 0.0);
   } else {
     double p = (life_stage - 0.5) * 2.0;
-    glColor3d(1.0-p, 0.0, 0.0);
+    glColor3d(1.0 - p, 0.0, 0.0);
   }
 }
 
@@ -59,12 +63,11 @@ void fire_update(double delta) {
 }
 
 void fire_init() {
+  glEnable(GL_LIGHT1);
   for (int i = 0; i < NUM_PARTICLES; i++) {
-    particles[i] = (Particle_t){random_range(0.0, 1.0),
-                                random_range(0.0, 1.0),
-                                0.0,
-                                random_range(0.5, 1.0),
-                                random_range(0.2, 0.8)};
+    particles[i] =
+        (Particle_t){random_range(0.0, 1.0), random_range(0.0, 1.0), 0.0,
+                     random_range(0.5, 1.0), random_range(0.2, 0.8)};
   }
 }
 
@@ -74,4 +77,9 @@ void fire_draw() {
     draw_particle(&particles[i]);
   }
   glEnable(GL_LIGHTING);
+  // float light_pos[] = {0.5, 0.5, 0.5, 1};
+  // glLightfv(GL_LIGHT1, GL_POSITION, light_pos);
+  // glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
+  // glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+  // glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
 }

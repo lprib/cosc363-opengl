@@ -6,6 +6,7 @@
 #include "julia.h"
 #include "museum.h"
 #include "serpinski.h"
+#include "planets.h"
 
 float camera_height = 10;
 float camera_angle = 0;
@@ -45,25 +46,33 @@ void display() {
   glEnable(GL_LIGHTING);
   // glutSolidTeapot(1);
 
+/*
   glPushMatrix();
-  glTranslated(5.0, 0.0, 0.0);
-  glScaled(5.0, 1.0, 5.0);
+  // glTranslated(5.0, 0.0, 0.0);
+  // glScaled(5.0, 1.0, 5.0);
+  glTranslated(0, 0.5, 0);
   julia_draw();
   glPopMatrix();
 
   glPushMatrix();
   glScaled(2.0, 2.0, 2.0);
-  serpinski_draw();
+  // serpinski_draw();
   glPopMatrix();
 
   glPushMatrix();
-  glTranslated(0.0, 5.0, 0.00);
+  glTranslated(7.5, 0.0, 8.5);
   fire_draw();
   glPopMatrix();
 
   glutSolidCube(1.0);
 
+  glPushMatrix();
+  glTranslated(0, -0.2, 0);
+  glScaled(2.0, 2.0, 2.0);
   museum_draw();
+  glPopMatrix();*/
+
+  planets_draw();
 
   glFlush();
 }
@@ -88,6 +97,7 @@ void initialize() {
   serpinski_init();
   fire_init();
   museum_init();
+  planets_init();
 }
 
 void keyboard_func(unsigned char key, int x, int y) {
@@ -111,6 +121,7 @@ void update_timer(int value) {
   serpinski_update(deltaSeconds);
   julia_update(deltaSeconds);
   fire_update(deltaSeconds);
+  planets_update(deltaSeconds);
 }
 
 int main(int argc, char** argv) {
