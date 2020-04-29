@@ -10,7 +10,7 @@
 // slight offset added to each tetrahedron to prevent z-fighting
 #define Z_FIGHT_OFFSET 0.001
 // max number of subfivides allowed to prevent lag
-#define SUBDIVIDE_LIMIT 7
+#define SUBDIVIDE_LIMIT 8
 
 // used for rotation axis offset
 #define CENTRE_X 0.5
@@ -45,7 +45,7 @@ static Tetra_t INITIAL = {
 
 static int tetras_buffer_size = 0;
 static Tetra_t* tetras_buffer = NULL;
-static int num_subdivides = 0;
+static int num_subdivides = 5;
 
 static double current_lerp = 0.0;
 

@@ -98,7 +98,6 @@ void camera_reshape_func(int width, int height) {
   glLoadIdentity();
   glViewport(0, 0, width, height);
   aspect_ratio = (double)width / height;
-  printf("%lf\n", aspect_ratio);
   gluPerspective(90.0, aspect_ratio, 0.1, 500.0);
   glMatrixMode(GL_MODELVIEW);
 }

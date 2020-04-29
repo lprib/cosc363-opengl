@@ -5,12 +5,9 @@
 #include "fire.h"
 #include "julia.h"
 #include "museum.h"
-#include "serpinski.h"
 #include "planets.h"
+#include "serpinski.h"
 #include "skybox.h"
-
-float camera_height = 10;
-float camera_angle = 0;
 
 int oldElapsedTime = 0;
 
@@ -24,7 +21,6 @@ void display() {
   camera_draw();
 
   glLightfv(GL_LIGHT0, GL_POSITION, lightPostion);
-
 
   glPushMatrix();
   // glTranslated(5.0, 0.0, 0.0);
@@ -44,7 +40,6 @@ void display() {
   glTranslated(7.5, 0.0, 8.5);
   fire_draw();
   glPopMatrix();
-  
 
   glPushMatrix();
   glTranslated(0, -0.2, 0);
@@ -53,7 +48,8 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslated(3.0, 0.5, 10.0);
+  glTranslated(4.0, 0.5, 10.0);
+  glScaled(2.0, 2.0, 2.0);
   planets_draw();
   glPopMatrix();
 
@@ -115,7 +111,7 @@ int main(int argc, char** argv) {
   glutInitDisplayMode(GLUT_SINGLE | GLUT_DEPTH);
   glutInitWindowSize(600, 600);
   glutInitWindowPosition(0, 0);
-  glutCreateWindow("Teapot");
+  glutCreateWindow("The Crib");
   initialize();
   glutDisplayFunc(display);
   glutSpecialFunc(special);

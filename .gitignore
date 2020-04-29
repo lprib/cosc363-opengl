@@ -1,1 +1,7 @@
 out/
+cosc report.aux
+cosc report.fdb_latexmk
+cosc report.fls
+cosc report.log
+cosc report.pdf
+cosc report.synctex.gz
