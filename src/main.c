@@ -7,24 +7,12 @@
 #include "museum.h"
 #include "serpinski.h"
 #include "planets.h"
+#include "skybox.h"
 
 float camera_height = 10;
 float camera_angle = 0;
 
 int oldElapsedTime = 0;
-
-void drawFloor() {
-  glColor3f(0, 0.5, 0);
-
-  for (int i = -50; i <= 50; i++) {
-    glBegin(GL_LINES);
-    glVertex3f(-50, 0, i);
-    glVertex3f(50, 0, i);
-    glVertex3f(i, 0, -50);
-    glVertex3f(i, 0, 50);
-    glEnd();
-  }
-}
 
 void display() {
   float lightPostion[4] = {0, 10, 15, 1};
@@ -34,51 +22,49 @@ void display() {
   glLoadIdentity();
 
   camera_draw();
-  // gluLookAt(12 * sin(camera_angle), camera_height, 12 * cos(camera_angle), 0,
-  // 0,
-  //           0, 0, 1, 0);
 
   glLightfv(GL_LIGHT0, GL_POSITION, lightPostion);
-
-  glDisable(GL_LIGHTING);
-  drawFloor();
-
-  glEnable(GL_LIGHTING);
   // glutSolidTeapot(1);
 
-/*
+
   glPushMatrix();
   // glTranslated(5.0, 0.0, 0.0);
-  // glScaled(5.0, 1.0, 5.0);
-  glTranslated(0, 0.5, 0);
+  glTranslated(5.0, 0.5, 15.0);
+  glRotated(-90, 1.0, 0.0, 0.0);
+  glScaled(5.0, 2.0, 5.0);
   julia_draw();
   glPopMatrix();
 
   glPushMatrix();
+  glTranslated(13.0, 0.1, 10.0);
   glScaled(2.0, 2.0, 2.0);
-  // serpinski_draw();
+  serpinski_draw();
   glPopMatrix();
 
   glPushMatrix();
   glTranslated(7.5, 0.0, 8.5);
   fire_draw();
   glPopMatrix();
-
-  glutSolidCube(1.0);
+  
 
   glPushMatrix();
   glTranslated(0, -0.2, 0);
   glScaled(2.0, 2.0, 2.0);
   museum_draw();
-  glPopMatrix();*/
+  glPopMatrix();
 
+  glPushMatrix();
+  glTranslated(3.0, 0.5, 10.0);
   planets_draw();
+  glPopMatrix();
+
+  skybox_draw();
 
   glFlush();
 }
 
 void initialize() {
-  glClearColor(1, 1, 1, 1);
+  glClearColor(0.5, 0.5, 0.5, 1);
 
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
@@ -98,6 +84,7 @@ void initialize() {
   fire_init();
   museum_init();
   planets_init();
+  skybox_init();
 }
 
 void keyboard_func(unsigned char key, int x, int y) {
@@ -135,6 +122,7 @@ int main(int argc, char** argv) {
   glutSpecialFunc(special);
   glutSpecialUpFunc(special_up);
   glutKeyboardFunc(keyboard_func);
+  glutReshapeFunc(camera_reshape_func);
   update_timer(0);
   glutMainLoop();
   return 0;

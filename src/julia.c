@@ -12,11 +12,13 @@
 #define BUF_WIDTH 500
 #define BUF_HEIGHT 500
 
+#define SIM_SPEED 0.3
+
 // Complex addition component
 static double cx, cy;
 
 // Escape radius
-static double r = 2;
+static double r = 1.5;
 
 // The cumulative frame delta time since the surface was last recomputed
 static double lastUpdate = 0.0;
@@ -49,8 +51,10 @@ static void populate_buffer() {
 
       int iter = 0;
       while (zx * zx + zy * zy < r * r && iter < MAX_ITERATIONS) {
-        double x_temp = zx * zx - zy * zy;
-        zy = 2 * zx * zy + cy;
+        // The expansion of (zx+zyi)^4 + (cx+cyi)
+        double x_temp =
+            zx * zx * zx * zx + zy * zy * zy * zy - 6 * zx * zx * zy * zy;
+        zy = 4 * zx * zx * zx * zy - 4 * zx * zy * zy * zy + cy;
         zx = x_temp + cx;
         smooth_color += exp(-sqrt(zx * zx + zy * zy));
         iter++;
@@ -69,10 +73,12 @@ void julia_update(double delta) {
   counter += delta;
   // only recal at 20fps
   if (counter - lastUpdate > 1.0 / 30.0) {
-    cx = 1.5 * sin(counter) + 0.3 * sin(6.123123 * counter) +
-         0.1 * sin(17 * counter);
-    cy = 0.5 * cos(counter) + 0.3 * cos(5.156 * counter) +
-         0.1 * cos(13 * counter);
+    cx = 1.0 * sin(counter * SIM_SPEED) +
+         0.3 * sin(6.123123 * counter * SIM_SPEED) +
+         0.1 * sin(17 * counter * SIM_SPEED);
+    cy = 0.4 * cos(counter * SIM_SPEED) +
+         0.3 * cos(5.156 * counter * SIM_SPEED) +
+         0.1 * cos(13 * counter * SIM_SPEED);
     populate_buffer();
     glutPostRedisplay();
 

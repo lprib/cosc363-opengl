@@ -11,5 +11,7 @@ void camera_special_keys_up(int key, int x, int y);
 void camera_draw();
 // Update the camera with frame delta time
 void camera_update(double delta);
+// called on window resize
+void camera_reshape_func(int width, int height);
 
 #endif

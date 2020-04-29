@@ -1,8 +1,8 @@
 #include "planets.h"
 
 #include <GL/freeglut.h>
-#include <stdbool.h>
 #include <math.h>
+#include <stdbool.h>
 
 #include "util.h"
 
@@ -15,13 +15,12 @@ typedef struct {
   double size;
 } Planet_t;
 
-#define SIM_SPEED 5
-#define NUM_PLANETS 2
+#define SIM_SPEED 3
+#define NUM_PLANETS 3
 
-static Planet_t planets[] = {
-  {0, "./res/earth.bmp", 0.5, 0.8, 5, 0.1},
-  {0, "./res/bricks.bmp", 0.3, 1, 10, 0.06}
-  };
+static Planet_t planets[] = {{0, "./res/sun.bmp", 0, 0.01, 0, 0.5},
+                             {0, "./res/earth.bmp", 0.2, -0.3, 1, 0.2},
+                             {0, "./res/mars.bmp", 0.1, 0.4, 1.5, 0.12}};
 
 static double counter = 0.0;
 
@@ -53,10 +52,10 @@ static void quad(int i0, int i1, int i2, int i3, bool first) {
 
 static void draw_planet(Planet_t* p) {
   glPushMatrix();
-  glScaled(p->size, p->size, p->size);
   glTranslated(p->orbit_dist * sin(p->orbit_speed * counter * SIM_SPEED), 0.0,
                p->orbit_dist * cos(p->orbit_speed * counter * SIM_SPEED));
   glRotated(counter * p->rotation_speed * 360 * SIM_SPEED, 0, 1, 0);
+  glScaled(p->size, p->size, p->size);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, p->texture_id);
   glBegin(GL_QUADS);
@@ -78,7 +77,7 @@ void planets_init() {
     load_bmp(planets[i].texture_filename);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
 }
 

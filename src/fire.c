@@ -10,9 +10,9 @@
 
 #define NUM_PARTICLES 500
 
-static float ambient[] = {1, 1, 1};
+static float ambient[] = {0.5, 0.5, 0.5};
 static float diffuse[] = {1.0, 1.0, 0.5};
-static float specular[] = {1, 1, 1};
+static float specular[] = {0.5, 0.5, 0.5};
 
 static double count = 0.0;
 
@@ -77,9 +77,9 @@ void fire_draw() {
     draw_particle(&particles[i]);
   }
   glEnable(GL_LIGHTING);
-  // float light_pos[] = {0.5, 0.5, 0.5, 1};
-  // glLightfv(GL_LIGHT1, GL_POSITION, light_pos);
-  // glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
-  // glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
-  // glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
+  float light_pos[] = {0.5, 0.5, 0.5, 1};
+  glLightfv(GL_LIGHT1, GL_POSITION, light_pos);
+  glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
+  glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
+  glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
 }

@@ -8,24 +8,28 @@
 #define MOVE_SPEED 5
 #define ANGLE_SPEED 3
 
-//camera angle
+// camera angle
 static double angle = 0.0;
-//camera x position
+// camera x position
 static double cx = 0.0;
-//camera y position
+// camera y position
 static double cz = 0.0;
 
-//look vector
+// look vector
 static double look_x = 0.0;
 static double look_z = -1.0;
 
-// Which keys are currently held down (left, right, up, down) arrows respectively
+static double aspect_ratio;
+
+// Which keys are currently held down (left, right, up, down) arrows
+// respectively
 static bool keysDown[] = {false, false, false, false};
 
 void camera_init() {
   glutIgnoreKeyRepeat(true);
-  glFrustum(-0.5, 0.5, -0.5, 0.5, 1.0, 1000.0);
-  // gluPerspective(40.0, 1.0, 20.0, 500.0);
+  // glFrustum(-0.5, 0.5, -0.5, 0.5, 1.0, 1000.0);
+  camera_reshape_func((double)(glutGet(GLUT_WINDOW_WIDTH)),
+                      (double)(glutGet(GLUT_WINDOW_HEIGHT)));
 }
 
 // Updates the state of pressed keys in keysDownArray, based on the key
@@ -88,4 +92,10 @@ void camera_update(double delta) {
 
 void camera_draw() {
   gluLookAt(cx, 1.0f, cz, cx + look_x, 1.0f, cz + look_z, 0.0f, 1.0f, 0.0f);
+}
+
+void camera_reshape_func(int width, int height) {
+  aspect_ratio = width / height;
+  printf("%lf\n", aspect_ratio);
+  gluPerspective(90.0, aspect_ratio, 0.1, 1000.0);
 }
