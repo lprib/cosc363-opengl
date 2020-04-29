@@ -20,7 +20,7 @@ typedef struct {
 
 static Planet_t planets[] = {{0, "./res/sun.bmp", 0, 0.01, 0, 0.5},
                              {0, "./res/earth.bmp", 0.2, -0.3, 1, 0.2},
-                             {0, "./res/mars.bmp", 0.1, 0.4, 1.5, 0.12}};
+                             {0, "./res/mars.bmp", 0.1, 0.4, 1.5, 0.1}};
 
 static double counter = 0.0;
 
@@ -58,6 +58,7 @@ static void draw_planet(Planet_t* p) {
   glScaled(p->size, p->size, p->size);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, p->texture_id);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   glBegin(GL_QUADS);
   quad(0, 1, 2, 3, true);
   quad(1, 5, 6, 2, true);
@@ -77,7 +78,6 @@ void planets_init() {
     load_bmp(planets[i].texture_filename);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   }
 }
 

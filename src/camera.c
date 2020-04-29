@@ -9,15 +9,15 @@
 #define ANGLE_SPEED 3
 
 // camera angle
-static double angle = 0.0;
+static double angle = M_PI;
 // camera x position
-static double cx = 0.0;
+static double cx = 8.0;
 // camera y position
-static double cz = 0.0;
+static double cz = -16.0;
 
 // look vector
 static double look_x = 0.0;
-static double look_z = -1.0;
+static double look_z = 1.0;
 
 static double aspect_ratio;
 
@@ -27,7 +27,6 @@ static bool keysDown[] = {false, false, false, false};
 
 void camera_init() {
   glutIgnoreKeyRepeat(true);
-  // glFrustum(-0.5, 0.5, -0.5, 0.5, 1.0, 1000.0);
   camera_reshape_func((double)(glutGet(GLUT_WINDOW_WIDTH)),
                       (double)(glutGet(GLUT_WINDOW_HEIGHT)));
 }
@@ -95,7 +94,11 @@ void camera_draw() {
 }
 
 void camera_reshape_func(int width, int height) {
-  aspect_ratio = width / height;
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glViewport(0, 0, width, height);
+  aspect_ratio = (double)width / height;
   printf("%lf\n", aspect_ratio);
-  gluPerspective(90.0, aspect_ratio, 0.1, 1000.0);
+  gluPerspective(90.0, aspect_ratio, 0.1, 500.0);
+  glMatrixMode(GL_MODELVIEW);
 }

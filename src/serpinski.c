@@ -228,4 +228,10 @@ void serpinski_init() {
   tetras_buffer_size = 1;
   tetras_buffer = (Tetra_t*)malloc(sizeof(Tetra_t));
   tetras_buffer[0] = INITIAL;
+
+  subdivide_all();
+  subdivide_all();
+  subdivide_all();
+  subdivide_all();
+  subdivide_all();
 }

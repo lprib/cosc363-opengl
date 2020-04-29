@@ -11,7 +11,7 @@
 #define NUM_PARTICLES 500
 
 static float ambient[] = {0.5, 0.5, 0.5};
-static float diffuse[] = {1.0, 1.0, 0.5};
+static float diffuse[] = {1.0, 1.0, 1.0};
 static float specular[] = {0.5, 0.5, 0.5};
 
 static double count = 0.0;

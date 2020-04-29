@@ -6,7 +6,7 @@
 #include "util.h"
 
 // max iterations of sqaring/addition before iteration is halted
-#define MAX_ITERATIONS 10
+#define MAX_ITERATIONS 6
 
 // resolution of julia set
 #define BUF_WIDTH 500

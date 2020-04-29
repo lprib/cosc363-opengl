@@ -24,7 +24,6 @@ void display() {
   camera_draw();
 
   glLightfv(GL_LIGHT0, GL_POSITION, lightPostion);
-  // glutSolidTeapot(1);
 
 
   glPushMatrix();
